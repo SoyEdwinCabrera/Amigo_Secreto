@@ -160,3 +160,29 @@ ul {
 .button-draw:hover {
     background-color: var(--color-button-hover);
 }
+
+.amigo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+}
+
+.button-delete {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-delete:hover {
+    background-color: #cc0000;
+}
