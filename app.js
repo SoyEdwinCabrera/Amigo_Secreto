@@ -49,7 +49,6 @@ function actualizarListaAmigos() {
     const nombreSpan = document.createElement('span');
     nombreSpan.textContent = amigos[i];
     
-    // Hacer el nombre clickeable
     nombreSpan.style.cursor = 'pointer';
     nombreSpan.onclick = function() {
       seleccionarParticipante(amigos[i]);
@@ -70,26 +69,30 @@ function actualizarListaAmigos() {
   }
 }
 
+
 function seleccionarParticipante(nombre) {
-  if (amigoSeleccionado) {
-    alert('Ya hay un participante seleccionado.');
+  if (parejasSorteadas.has(nombre)) {
+    alert('Este participante ya realizó su sorteo.');
     return;
   }
   
   if (confirm(`¿Eres ${nombre}? Esto iniciará el sorteo para ti.`)) {
     amigoSeleccionado = nombre;
-    amigos = amigos.filter(amigo => amigo !== nombre);
     
     const mensaje = document.createElement('div');
     mensaje.className = 'participante-seleccionado';
     mensaje.innerHTML = `<p>Participante seleccionado: ${nombre}</p>`;
+    
+    const mensajeAnterior = document.querySelector('.participante-seleccionado');
+    if (mensajeAnterior) {
+    mensajeAnterior.remove();
+    }
+    
     document.querySelector('.input-section').insertBefore(mensaje, document.getElementById('listaAmigos'));
     
     const botonSortear = document.querySelector('.button-draw');
     botonSortear.disabled = false;
     botonSortear.textContent = 'Sortear mi amigo secreto';
-    
-    actualizarListaAmigos();
   }
 }
 
@@ -150,25 +153,20 @@ function mostrarResultadoFinal(amigoSorteado) {
   <li class="result-item final">
     <span>${amigoSeleccionado}, tu amigo secreto es: ${amigoSorteado}</span>
   </li>`;
+  
+  const botonSortear = document.querySelector('.button-draw');
 
   if (parejasSorteadas.size === amigos.length) {
     alert('¡El sorteo ha terminado! Todos tienen su amigo secreto.');
-    const botonSortear = document.querySelector('.button-draw');
-    botonSortear.disabled = true;
+    botonSortear.textContent = 'Nuevo Sorteo';
+    botonSortear.onclick = reiniciarApp;
   } else {
-    agregarBotonSiguiente();
+    botonSortear.textContent = 'Siguiente participante';
+    botonSortear.onclick = prepararSiguienteSorteo;
   }
+  actualizarListaParejas();
 }
-
-function agregarBotonSiguiente() {
-  const containerBotones = document.querySelector('.button-container');
-  const botonSiguiente = document.createElement('button');
-  botonSiguiente.className = 'button-draw';
-  botonSiguiente.textContent = 'Siguiente participante';
-  botonSiguiente.onclick = prepararSiguienteSorteo;
-  containerBotones.appendChild(botonSiguiente);
-}
-
+  
 function prepararSiguienteSorteo() {
   amigoSeleccionado = null;
   const resultadoElement = document.getElementById('resultado');
@@ -176,58 +174,61 @@ function prepararSiguienteSorteo() {
   
   const mensajeAnterior = document.querySelector('.participante-seleccionado');
   if (mensajeAnterior) {
-    mensajeAnterior.remove();
-  }
-  
-  const botonSiguiente = document.querySelectorAll('.button-draw')[1];
-  if (botonSiguiente) {
-    botonSiguiente.remove();
+      mensajeAnterior.remove();
   }
   
   const botonSortear = document.querySelector('.button-draw');
   botonSortear.disabled = true;
   botonSortear.textContent = 'Sortear amigo';
+  botonSortear.onclick = sortearAmigo; // Restaurar la función original
   
   actualizarListaAmigos();
 }
 
-function reiniciarSorteo() {
-  amigos = [...amigos];
-  parejasSorteadas.clear();
-  amigoSeleccionado = null;
-  
-  const resultadoElement = document.getElementById('resultado');
-  resultadoElement.innerHTML = '';
-  
-  const botonSortear = document.querySelector('.button-draw');
-  botonSortear.disabled = false;
-  botonSortear.style.opacity = '1';
-  
-  actualizarListaAmigos();
-}
-
-function seleccionarParticipante(nombre) {
-  if (parejasSorteadas.has(nombre)) {
-    alert('Este participante ya realizó su sorteo.');
-    return;
+function actualizarListaParejas() {
+  const listaParejas = document.getElementById('parejasSorteadas');
+  if (!listaParejas) {
+    const nuevaLista = document.createElement('ul');
+    nuevaLista.id = 'parejasSorteadas';
+    nuevaLista.className = 'parejas-list';
+    document.querySelector('.input-section').appendChild(nuevaLista);
   }
-  
-  if (confirm(`¿Eres ${nombre}? Esto iniciará el sorteo para ti.`)) {
-    amigoSeleccionado = nombre;
+
+  const lista = document.getElementById('parejasSorteadas');
+  lista.innerHTML = '<h3>Parejas Sorteadas:</h3>';
+
+  parejasSorteadas.forEach((valor, clave) => {
+    const li = document.createElement('li');
+    li.textContent = `${clave} → ${valor}`;
+    lista.appendChild(li);
+  });
+}
+
+
+function reiniciarApp() {
+  if (confirm('¿Deseas comenzar un nuevo juego? Se borrarán todos los datos actuales.')) {
+    amigos = [];
+    amigosSorteados = [];
+    amigoSeleccionado = null;
+    parejasSorteadas.clear();
     
-    const mensaje = document.createElement('div');
-    mensaje.className = 'participante-seleccionado';
-    mensaje.innerHTML = `<p>Participante seleccionado: ${nombre}</p>`;
+    const listaAmigos = document.getElementById('listaAmigos');
+    const resultado = document.getElementById('resultado');
+    const parejasSorteadasList = document.getElementById('parejasSorteadas');
     
-    const mensajeAnterior = document.querySelector('.participante-seleccionado');
-    if (mensajeAnterior) {
-    mensajeAnterior.remove();
+    listaAmigos.innerHTML = '';
+    resultado.innerHTML = '';
+    if (parejasSorteadasList) {
+        parejasSorteadasList.remove();
     }
-    
-    document.querySelector('.input-section').insertBefore(mensaje, document.getElementById('listaAmigos'));
-    
-    const botonSortear = document.querySelector('.button-draw');
-    botonSortear.disabled = false;
-    botonSortear.textContent = 'Sortear mi amigo secreto';
+    const mensajeSeleccionado = document.querySelector('.participante-seleccionado');
+    if (mensajeSeleccionado) {
+      mensajeSeleccionado.remove();
+    }
+    const containerBotones = document.querySelector('.button-container');
+    containerBotones.innerHTML = `
+    <button class="button-draw" onclick="sortearAmigo()" disabled>
+      Sortear amigo
+    </button>`;
   }
 }
