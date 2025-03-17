@@ -186,3 +186,21 @@ ul {
 .button-delete:hover {
     background-color: #cc0000;
 }
+
+.sorting {
+        animation: bounce 0.5s infinite;
+    }
+
+    .final {
+        animation: fadeIn 0.5s;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
