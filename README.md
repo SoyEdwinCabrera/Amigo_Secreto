@@ -40,7 +40,7 @@ Una aplicación web interactiva para organizar sorteos de "Amigo Secreto". Permi
 ## 🎯 Funcionalidades Detalladas
 
 ### Gestión de Participantes
-
+```javascript
 function agregarAmigo() {
     // Validaciones:
     // - Nombre no vacío
@@ -51,7 +51,7 @@ function agregarAmigo() {
 ```
 
 ### Sistema de Sorteo
-
+```javascript
 function sortearAmigo() {
     // Lógica de sorteo:
     // - Selección aleatoria
