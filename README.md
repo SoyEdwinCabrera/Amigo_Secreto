@@ -102,6 +102,3 @@ Sugerencias y contribuciones son bienvenidas. Por favor, abre un issue para disc
 - [ ] Exportación de resultados
 - [ ] Opciones de personalización
 - [ ] Soporte para múltiples grupos
-
-## 📄 Licencia
-Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE.md para detalles.
